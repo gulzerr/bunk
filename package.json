@@ -1,0 +1,19 @@
+{
+  "name": "bunk",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun --watch run index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.1",
+    "@types/figlet": "^1.5.8"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@bunicorn/server": "^0.0.19",
+    "figlet": "^1.7.0"
+  }
+}
