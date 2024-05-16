@@ -3,7 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun --watch run index.ts"
+    "start": "bun --watch run ./src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.1.1",
@@ -14,6 +14,10 @@
   },
   "dependencies": {
     "@bunicorn/server": "^0.0.19",
-    "figlet": "^1.7.0"
+    "@types/ramda": "^0.30.0",
+    "date-fns": "^3.6.0",
+    "figlet": "^1.7.0",
+    "ramda": "^0.30.0",
+    "zod": "^3.23.8"
   }
 }

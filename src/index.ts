@@ -1,9 +1,8 @@
 import { app } from "./app";
 
 const server = Bun.serve({
-  fetch(req) {
-    // handleRequest function requires the Request object
-    // and returns a Response object, that simple!
+  fetch(req, res) {
+    // app.addMiddleware(responseLogger);
     return app.handleRequest(req);
   },
   port: 8000,

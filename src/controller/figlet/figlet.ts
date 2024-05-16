@@ -1,9 +1,17 @@
 import figlet from "figlet";
-import { RouteBuilder } from "@bunicorn/server";
+import { z } from "zod";
+import { createMiddleware } from "@bunicorn/server";
+import { baseRouteBuilder } from "../../middleWares";
 
-const routeBuilder = new RouteBuilder();
-
-export const getFiglet = routeBuilder.get("/fetchFiglet", async (req) => {
-  const body = figlet.textSync("Bun!");
-  return new Response(body);
+const anotherMiddleware = createMiddleware((ctx) => {
+  /* The same code we had above */
 });
+const figletRouteBuilder = baseRouteBuilder.use(anotherMiddleware);
+export const getFiglet = figletRouteBuilder
+  .input(z.object({ text: z.string() }))
+  .post("/fetchFiglet", async (ctx) => {
+    const body = await ctx.getBody();
+    const response = figlet.textSync(body.text);
+    //string next line
+    return new Response(response);
+  });
