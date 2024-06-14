@@ -3,7 +3,10 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun --watch run ./src/index.ts"
+    "dev": "bun --watch src/index.ts",
+    "build": "bun build src/index.ts",
+    "start": "NODE_ENV=production bun src/index.ts",
+    "test": "bun test"
   },
   "devDependencies": {
     "@types/bun": "^1.1.1",
@@ -13,10 +16,12 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@bunicorn/server": "^0.0.19",
+    "@bogeychan/elysia-logger": "^0.0.22",
     "@types/ramda": "^0.30.0",
     "date-fns": "^3.6.0",
+    "elysia": "^1.0.20",
     "figlet": "^1.7.0",
+    "pino-pretty": "^11.2.1",
     "ramda": "^0.30.0",
     "zod": "^3.23.8"
   }

@@ -1,17 +1,7 @@
-import figlet from "figlet";
-import { z } from "zod";
-import { createMiddleware } from "@bunicorn/server";
-import { baseRouteBuilder } from "../../middleWares";
+import Elysia from "elysia";
+import { generateFiglet } from "../../services/figlet";
 
-const anotherMiddleware = createMiddleware((ctx) => {
-  /* The same code we had above */
+export const getFiglet = new Elysia().get("/fetchFiglet", async () => {
+  const response = await generateFiglet("Bun");
+  return new Response(response);
 });
-const figletRouteBuilder = baseRouteBuilder.use(anotherMiddleware);
-export const getFiglet = figletRouteBuilder
-  .input(z.object({ text: z.string() }))
-  .post("/fetchFiglet", async (ctx) => {
-    const body = await ctx.getBody();
-    const response = figlet.textSync(body.text);
-    //string next line
-    return new Response(response);
-  });

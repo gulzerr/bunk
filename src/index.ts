@@ -1,10 +1,16 @@
-import { app } from "./app";
+import { Elysia } from "elysia";
+import { baseApp } from "./app";
+import { logMiddleware } from "./middleWares";
 
-const server = Bun.serve({
-  fetch(req, res) {
-    // app.addMiddleware(responseLogger);
-    return app.handleRequest(req);
-  },
-  port: 8000,
-});
-console.log(`Listening on http://localhost:${server.port} ...`);
+const hey = new Elysia().get("/hey", () => "hey");
+
+const port = 8000;
+new Elysia()
+  .use(logMiddleware)
+  .use(baseApp)
+  .group("/holla", (app) => app.use(hey))
+  .use(hey)
+  .get("/", () => "hello")
+  .listen(port);
+
+console.log(`Listening on http://localhost:${port}`);

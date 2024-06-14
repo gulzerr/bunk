@@ -1,7 +1,7 @@
-import { BunicornApp, createMiddleware } from "@bunicorn/server";
+import Elysia from "elysia";
 import { figletRoutes } from "./controller/figlet";
 
-const baseApp = new BunicornApp({ basePath: "/api" });
-const app = baseApp.addRoutes(figletRoutes);
+const baseApp = new Elysia();
+baseApp.group("/v1", (app) => app.use(figletRoutes));
 
-export { app };
+export { baseApp };

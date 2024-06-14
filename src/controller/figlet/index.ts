@@ -1,4 +1,8 @@
-import { groupRoutes } from "@bunicorn/server";
+import Elysia from "elysia";
 import { getFiglet } from "./figlet";
 
-export const figletRoutes = groupRoutes("/figlet", [getFiglet]);
+const figletRoutes = new Elysia();
+
+figletRoutes.group("/figlet", (app) => app.use(getFiglet));
+
+export { figletRoutes };
