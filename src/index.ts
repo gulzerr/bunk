@@ -1,12 +1,12 @@
 import { Elysia } from "elysia";
 import { baseApp } from "./app";
-import { logMiddleware } from "./middleWares";
+import { elysiaLogging } from "./middleWares";
 
 const hey = new Elysia().get("/hey", () => "hey");
 
 const port = 8000;
 new Elysia()
-  .use(logMiddleware)
+  .use(elysiaLogging)
   .use(baseApp)
   .group("/holla", (app) => app.use(hey))
   .use(hey)

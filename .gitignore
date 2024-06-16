@@ -106,6 +106,9 @@ web_modules/
 .env.production.local
 .env.local
 
+# Ignore bun.lockb file
+bun.lockb
+
 # parcel-bundler cache (https://parceljs.org/)
 
 .parcel-cache

@@ -1,26 +1,23 @@
-import { logger } from "@bogeychan/elysia-logger";
+import { ElysiaLogging, type Logger } from "@otherguy/elysia-logging";
 import { format } from "date-fns";
-import Elysia from "elysia";
 
-export const logMiddleware = new Elysia()
-  .use(
-    logger({
-      transport: {
-        target: "pino-pretty",
-        options: {
-          colorize: true,
-        },
-      },
-    })
-  )
-  .get("/", (ctx) => {
-    ctx.log.info(ctx, "Context");
-    console.log(`----------------->>>>>>> REQUEST ${ctx.request.method} ${
-      ctx.path
-    }
-      Request Id: req.id
-      Timestamp: ${format(new Date(), "yyyy-MM-dd HH:mm:ss.SSS")}
-      Body: ${JSON.stringify(ctx.body)}
-      `);
-    return "basic";
-  });
+const logger: Logger = console;
+
+export const elysiaLogging = ElysiaLogging(logger, {
+  format: (log) => `
+  [${self.crypto.randomUUID()}] "GET /v1/figlet/fetchFiglet completed with status ${
+    log.response.status_code
+  } in ${log.response.time} ms",
+  request: {
+    method: ${log.request.method},
+    url: {
+      path: ${log.request.url.path},
+      params: ${JSON.stringify(log.request.url.params)},
+    },
+  },
+  response: {
+    status_code: ${log.response.status_code},
+    timeStamp: ${format(new Date(), "yyyy-MM-dd HH:mm:ss.SSS")},
+  },
+`,
+});
