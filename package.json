@@ -10,13 +10,18 @@
   },
   "devDependencies": {
     "@types/bun": "^1.1.1",
-    "@types/figlet": "^1.5.8"
+    "@types/figlet": "^1.5.8",
+    "prisma": "^5.16.1",
+    "elysia": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@elysiajs/cookie": "^0.8.0",
+    "@elysiajs/jwt": "^1.0.2",
     "@otherguy/elysia-logging": "^0.0.17",
+    "@prisma/client": "^5.16.1",
     "@types/ramda": "^0.30.0",
     "date-fns": "^3.6.0",
     "date-fns-tz": "^3.1.3",

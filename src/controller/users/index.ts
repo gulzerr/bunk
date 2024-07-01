@@ -1,5 +1,5 @@
 import { Elysia, t } from "elysia";
-import { createUser } from "../../services/users/user";
+import { createUser } from "../../services/users/index.ts";
 import { logger } from "../../services/utils/utils";
 
 export const createUserCtrl = new Elysia().post(
@@ -7,13 +7,13 @@ export const createUserCtrl = new Elysia().post(
   async ({ body }) => {
     try {
       const { firstName, lastName, email, password, phone } = body;
-      const user = await createUser({
+      const user = {
         firstName,
         lastName,
         email,
         password,
         phone,
-      });
+      };
       return {
         isError: false,
         data: user,
