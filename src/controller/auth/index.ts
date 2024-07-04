@@ -1,8 +1,6 @@
 import { Elysia, t } from "elysia";
-import { prisma } from "../../libs/prisma";
-import { comparePassword } from "../../services/utils/bcrypt";
 import { isAuthenticated } from "../../middlewares/auth";
-import { signUp } from "../../services/auth";
+import { login, signUp } from "../../services/auth";
 
 export const auth = (app: Elysia) =>
   app.group("/auth", (app) =>
@@ -73,63 +71,34 @@ export const auth = (app: Elysia) =>
       .post(
         "/login",
         // @ts-ignore
-        async ({ body, set, jwt, setCookie }) => {
-          const { username, password } = body;
-          // verify email/username
-          const user = await prisma.users.findFirst({
-            where: {
-              OR: [
-                {
-                  EMAIL: username,
-                },
-                {
-                  USERNAME: username,
-                },
-              ],
-            },
-            select: {
-              ID: true,
-              HASH: true,
-              SALT: true,
-            },
-          });
+        async ({ body, set, jwt, cookie: { accessToken } }) => {
+          try {
+            const { username, password } = body;
+            // verify email/username
+            const token = await login({
+              username,
+              password,
+              jwt,
+              accessToken,
+            });
 
-          if (!user) {
-            set.status = 400;
             return {
-              success: false,
+              isError: false,
+              message: "Logged-in successfully",
+              data: {
+                access_token: token.value,
+              },
+            };
+          } catch (error) {
+            const err = error as Error;
+            set.status = 400;
+            console.log(`Error in login: ${err.message}`);
+            return {
+              isError: true,
+              message: err.message,
               data: null,
-              message: "Invalid credentials",
             };
           }
-
-          // verify password
-          const match = await comparePassword(password, user.SALT, user.HASH);
-          if (!match) {
-            set.status = 400;
-            return {
-              success: false,
-              data: null,
-              message: "Invalid credentials",
-            };
-          }
-
-          // generate access
-
-          const accessToken = await jwt.sign({
-            userId: user.ID,
-          });
-
-          setCookie("access_token", accessToken, {
-            maxAge: 15 * 60, // 15 minutes
-            path: "/",
-          });
-
-          return {
-            success: true,
-            data: null,
-            message: "Account login successfully",
-          };
         },
         {
           body: t.Object({
@@ -139,6 +108,18 @@ export const auth = (app: Elysia) =>
         }
       )
       .use(isAuthenticated)
+      .post(
+        "/logout",
+        async ({ cookie: { accessToken, refreshToken }, user }) => {
+          // remove refresh token and access token from cookies
+          accessToken.remove();
+          refreshToken.remove();
+
+          return {
+            message: "Logout successfully",
+          };
+        }
+      )
       // protected route
       .get("/me", ({ user }) => {
         return {

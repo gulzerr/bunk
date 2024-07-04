@@ -1,10 +1,10 @@
 import { Elysia, t } from "elysia";
-import { createUser } from "../../services/users/index.ts";
 import { logger } from "../../services/utils/utils";
+import { isAuthenticated } from "../../middlewares/auth";
 
-export const createUserCtrl = new Elysia().post(
+export const createUserCtrl = new Elysia().use(isAuthenticated).post(
   "/createUser",
-  async ({ body }) => {
+  async ({ body, cookie }) => {
     try {
       const { firstName, lastName, email, password, phone } = body;
       const user = {

@@ -52,3 +52,27 @@ export const fetchUserByUserName = async (
   });
   return data;
 };
+
+export const fetchUserByEmailOrUserName = async (
+  username: string,
+  prisma: Prisma.TransactionClient
+) => {
+  const user = await prisma.users.findFirst({
+    where: {
+      OR: [
+        {
+          EMAIL: username,
+        },
+        {
+          USERNAME: username,
+        },
+      ],
+    },
+    select: {
+      ID: true,
+      HASH: true,
+      SALT: true,
+    },
+  });
+  return user;
+};
