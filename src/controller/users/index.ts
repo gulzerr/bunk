@@ -4,7 +4,7 @@ import { isAuthenticated } from "../../middlewares/auth";
 
 export const createUserCtrl = new Elysia().use(isAuthenticated).post(
   "/createUser",
-  async ({ body, cookie }) => {
+  async ({ body }) => {
     try {
       const { firstName, lastName, email, password, phone } = body;
       const user = {
